@@ -97,7 +97,7 @@ amount = water_amount_per_cm × height_cm
 
 ## Plant Types
 
-36 curated species + custom plant option. Each species defines:
+39 curated species + custom plant option. Each species defines:
 
 - `thirst_factor` — interval multiplier (0.7 = very thirsty, 2.2 = very drought-tolerant)
 - `water_amount_per_cm` — ml per cm of plant height
@@ -216,7 +216,8 @@ GET    /api/plant-types                list all species
 POST   /api/plant-types                create custom species
 
 GET    /api/plants                     list plants with computed next_water_date,
-                                       water_amount_ml, overdue flag
+                                       next_fertilize_date, water_amount_ml,
+                                       overdue_water, overdue_fertilize flags
 POST   /api/plants                     add plant
 GET    /api/plants/:id                 plant detail + care history
 PUT    /api/plants/:id                 update plant
@@ -226,6 +227,7 @@ POST   /api/plants/:id/water           log watering
 POST   /api/plants/:id/fertilize       log fertilizing
 POST   /api/plants/water-batch         { plant_ids: [...] } — batch water
 POST   /api/plants/fertilize-batch     { plant_ids: [...] } — batch fertilize
+                                       (batch routes must be declared before /:id routes in Express)
 
 POST   /api/push/subscribe             save push subscription
 DELETE /api/push/subscribe             unsubscribe
@@ -235,7 +237,7 @@ GET    /api/settings                   get all settings
 PUT    /api/settings/:key              update a setting
 ```
 
-`GET /api/plants` computes and returns `next_water_date`, `water_amount_ml`, and `overdue` server-side so the frontend never needs the formula.
+`GET /api/plants` computes and returns `next_water_date`, `next_fertilize_date`, `water_amount_ml`, `overdue_water`, and `overdue_fertilize` server-side so the frontend never needs the formula.
 
 ---
 
