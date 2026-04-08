@@ -18,15 +18,16 @@ if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => res.sendFile(path.join(clientDist, 'index.html')));
 }
 
-// Start notification scheduler
-const { initScheduler } = require('./lib/scheduler');
-if (require.main === module) {
-  initScheduler();
-}
-
 const PORT = process.env.PORT || 3000;
 if (require.main === module) {
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  const { setup } = require('./db/setup');
+  const { initScheduler } = require('./lib/scheduler');
+  setup()
+    .then(() => {
+      initScheduler();
+      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    })
+    .catch(err => { console.error('Startup failed:', err); process.exit(1); });
 }
 
 module.exports = app;
