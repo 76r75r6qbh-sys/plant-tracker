@@ -10,6 +10,11 @@ services:
       - '5433:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U planttracker -d planttracker"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
   app:
     build: .
     ports:
@@ -18,6 +23,7 @@ services:
       DATABASE_URL: postgres://planttracker:planttracker@db:5432/planttracker
       PORT: 3000
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 volumes:
   pgdata:

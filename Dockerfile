@@ -17,6 +17,9 @@ COPY server/package.json ./server/
 RUN npm install --prefix server
 COPY server/ ./server/
 
+COPY docker-entrypoint.sh ./
+RUN chmod +x docker-entrypoint.sh
+
 ENV NODE_ENV=production
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["./docker-entrypoint.sh"]
